@@ -1,13 +1,17 @@
 #!/usr/bin/python3
 
-# Codeforces Random Problem
+# Codeforces Random Problem Getter
 # Calvin Gagliano
 # @calgagi
 
 import os
 import sys
 import errno
+import requests
+import json
+from random import randint
 
+# Only used for API key and secret for Codeforces. May need in the future.
 def get_api(item, force_get):
     res = ""
     home = os.path.expanduser("~")
@@ -46,29 +50,55 @@ def get_number(query):
 
         
 def get_tags():
+    print("Enter optional problem tags:")
     tags = []
-    lower_bound = get_number("Enter lower difficulty bound (inclusive): ")
-    upper_bound = get_number("Enter upper difficulty bound (inclusive): ")
-    for tag in range(lower_bound, upper_bound+1, 100):
-        tags.append(str(tag))
     while True:
-        q = input("Enter another tag (or $ to stop): ")
+        q = input("Enter problem tag (or $ to stop): ")
         if q == "$":
             break
         tags.append(q)
     return tags
 
 
-def query_for_problems(key, secret, tags):
-    print("Querying for problems...")
-    # TODO
-
-        
-def main():
-    apiKey = get_api("key", False)
-    apiSecret = get_api("secret", False)
-    # TODO: Test API key + secrets
+def get_problems(lower_bound, upper_bound):
     tags = get_tags()
-    problems = query_for_problems(key, secret, tags)
+    url = "https://codeforces.com/api/problemset.problems?tags="
+    for tag in tags:
+        url += tag + ";"
+    if url[len(url)-1] == ';':
+        url = url[:-1]
+    res = requests.get(url).json()
+    if res["status"] == "FAILED":
+        print("Request returned with FAILED status. Exiting...")
+        quit()
+    problems = res["result"]["problems"]
+    filtered_problems = [];
+    for i in range(len(problems)):
+        if "rating" not in problems[i]:
+            continue
+        if problems[i]["rating"] >= lower_bound and problems[i]["rating"] <= upper_bound:
+            filtered_problems.append(problems[i])
+    return filtered_problems 
+
+
+def random_problem(problems):
+    idx = randint(0, len(problems)-1)
+    return "\n" + problems[idx]["name"] + "\nURL: " + "https://codeforces.com/problemset/problem/" + str(problems[idx]["contestId"]) + "/" + problems[idx]["index"]
+
+
+def main():
+    # apiKey = get_api("key", False)
+    # apiSecret = get_api("secret", False)
+    print("Welcome to Codeforces Random Problem Getter")
+    lower_bound = get_number("Enter lower difficulty bound (inclusive): ")
+    upper_bound = get_number("Enter upper difficulty bound (inclusive): ")
+    problems = get_problems(lower_bound, upper_bound)
+    print("Press enter to get random problems, and input anything to quit.")
+    while True:
+        goagain = input("")
+        if goagain != "":
+            break
+        print("==" + random_problem(problems))
+
 
 main()
