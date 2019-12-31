@@ -53,8 +53,8 @@ def get_tags():
     print("Enter optional problem tags:")
     tags = []
     while True:
-        q = input("Enter problem tag (or $ to stop): ")
-        if q == "$":
+        q = input("Enter problem tag (or nothing to stop): ")
+        if q == "":
             break
         tags.append(q)
     return tags

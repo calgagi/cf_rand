@@ -2,4 +2,4 @@
 
 Get a random problem in a certain difficulty range from Codeforces.com.
 
-To generate an API key, go to [codeforces.com/settings/api](https://codeforces.com/settings/api). If you use it in this program, both the key and secret will be stored in plaintext in `~/.codeforces_random_problem`.
+Added tag functionality so that you can query for problems with specific tags now too!
