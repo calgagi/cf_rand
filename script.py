@@ -72,7 +72,7 @@ def get_problems(lower_bound, upper_bound):
         print("Request returned with FAILED status. Exiting...")
         quit()
     problems = res["result"]["problems"]
-    filtered_problems = [];
+    filtered_problems = []
     for i in range(len(problems)):
         if "rating" not in problems[i]:
             continue
