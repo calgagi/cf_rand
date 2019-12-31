@@ -89,7 +89,7 @@ def random_problem(problems):
 def main():
     # apiKey = get_api("key", False)
     # apiSecret = get_api("secret", False)
-    print("Welcome to Codeforces Random Problem Getter")
+    print("Welcome to cf_rand: Codeforces Random Problem Getter")
     lower_bound = get_number("Enter lower difficulty bound (inclusive): ")
     upper_bound = get_number("Enter upper difficulty bound (inclusive): ")
     problems = get_problems(lower_bound, upper_bound)
